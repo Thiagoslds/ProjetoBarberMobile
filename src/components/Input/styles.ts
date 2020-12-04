@@ -11,7 +11,7 @@ export const Container = styled.View `
     margin-bottom: 8px;
 
     flex-direction: row; /* padrao é coluna*/
-    align-items: center;
+    align-items: center; 
 `;
 
 export const TextInput = styled.TextInput ` 
