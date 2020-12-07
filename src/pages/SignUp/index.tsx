@@ -9,6 +9,7 @@ import {Form} from '@unform/mobile'
 import {FormHandles} from '@unform/core'
 import * as Yup from 'yup';
 import getValidationErrors from '../../utils/getValidationErrors'
+import api from '../../services/api' 
 
 import {Container, Title, BackToSignIn, BackToSignInText } from './styles';
 
@@ -36,16 +37,20 @@ const SignUp: React.FC = () => {
                 password: Yup.string().min(6, 'No mínimo 6 dígitos')
             });
 
+            console.log(data)
+            await api.post('/users', data);
+
+            Alert.alert('Cadastro realizado com sucesso!',
+            'Você já pode fazer login na aplicação.');
+
             await schema.validate(data, {
                 abortEarly: false //para nao abortat quando pegar o primeiro erro
             }); //assincrono para verificar se o data é válido
 
-            // await api.post('/users', data);
-
-            // history.push('/'); //Redireciona depois de cadastrado para a pagina inicial
-          
+            navigation.goBack();
 
         } catch(err){
+            console.log(err)
                /*Se for um erro de validação gerado pelo Yup*/
             if(err instanceof Yup.ValidationError){
                 const errors = getValidationErrors(err); //passa o erro para a função criada
@@ -59,7 +64,7 @@ const SignUp: React.FC = () => {
                  'Ocorreu um erro ao fazer cadastro'
             );
         }
-    }, []);
+    }, [navigation]);
 
     return (
     <>
@@ -92,13 +97,13 @@ const SignUp: React.FC = () => {
                     onSubmitEditing={()=>{
                         formRef.current?.submitForm();
                     }}
-                />
-                
+                />    
             </Form>
+
             <Button onPress={()=>{
                     formRef.current?.submitForm(); /*O subimtform é o modulo unform que oferece*/
                 }} >Entrar</Button>
-
+            
         </Container>
         <BackToSignIn onPress={()=> navigation.goBack()}>
             <Icon name="arrow-left" size={20} color="#ff9000" />

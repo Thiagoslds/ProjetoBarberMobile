@@ -9,6 +9,7 @@ import {Form} from '@unform/mobile'
 import {FormHandles} from '@unform/core'
 import * as Yup from 'yup'
 import getValidationErrors from '../../utils/getValidationErrors'
+import {useAuth} from '../../hooks/AuthContext'
 
 import {Container, Title, ForgotPassword, ForgotPasswordText,
 CreateAccountButton, CreateAccountButtonText } from './styles';
@@ -22,6 +23,9 @@ const SignIn: React.FC = () => {
     const formRef = useRef<FormHandles>(null); /*Referencias diretas de uma ação, no caso
     será para especificar o botao que ao pressionar sera submetido o formulario*/
     const navigation = useNavigation();
+    const {signIn, user} = useAuth();
+
+    console.log(user);
 
     /*Função para manipular os dados enviados do formulario, usando modulo callback*/ 
     const handleSignIn = useCallback(async (data: SignInFormData) => {
@@ -37,10 +41,10 @@ const SignIn: React.FC = () => {
             });
 
              /*envia o email e senha capturados para a função signin, definida no atuhcontext*/
-            //  await signIn({
-            //     email: data.email,
-            //     password: data.password,
-            // });    
+             await signIn({
+                email: data.email,
+                password: data.password,
+            });    
 
             await schema.validate(data, {
                 abortEarly: false //para nao abortat quando pegar o primeiro erro
@@ -64,7 +68,7 @@ const SignIn: React.FC = () => {
              );
 
         }
-    }, []) //variavel externa precisa ser declarada como segundo parametro;
+    }, [signIn]) //variavel externa precisa ser declarada como segundo parametro;
 
     return (
     <>
