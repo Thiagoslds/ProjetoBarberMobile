@@ -30,15 +30,16 @@ const SignIn: React.FC = () => {
     /*Função para manipular os dados enviados do formulario, usando modulo callback*/ 
     const handleSignIn = useCallback(async (data: SignInFormData) => {
         try{
-
             formRef.current?.setErrors({});
-
             const schema = Yup.object().shape({ /*validar o objeto data inteiro qie vai ter o 
                 formato shape */
-                name: Yup.string().required('Nome Obrigatório'),
                 email: Yup.string().required('E-mail obrigatório').email('Digite um e-mail válido'),
                 password: Yup.string().required('Senha obrigatória')
             });
+
+            await schema.validate(data, {
+                abortEarly: false //para nao abortat quando pegar o primeiro erro
+            }); //assincrono para verificar se o data é válido          
 
              /*envia o email e senha capturados para a função signin, definida no atuhcontext*/
              await signIn({
@@ -46,12 +47,7 @@ const SignIn: React.FC = () => {
                 password: data.password,
             });    
 
-            await schema.validate(data, {
-                abortEarly: false //para nao abortat quando pegar o primeiro erro
-            }); //assincrono para verificar se o data é válido          
-
-            // history.push('/dashboard');
-
+            
         } catch(err){
             /*Se for um erro de validação gerado pelo Yup*/
             if(err instanceof Yup.ValidationError){
@@ -99,7 +95,7 @@ const SignIn: React.FC = () => {
             </Form>
             <Button  onPress={()=>{
                     formRef.current?.submitForm(); /*O subimtform é o modulo unform que oferece*/
-                }} >Entrar</Button>
+                }} >Entrar!</Button>
 
             <ForgotPassword>
                 <ForgotPasswordText>Esqueci minha senha</ForgotPasswordText>

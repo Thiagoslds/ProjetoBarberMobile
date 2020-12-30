@@ -9,13 +9,14 @@ deixando o nome e o icone obrigatorios*/
 interface InputProps extends TextInputProps{
     name: string;
     icon: string;
+    containerStyle?: {} //permite estilizar passando propriedades diretamente
 }
 
 interface InputValueReference{
     value:string; //será o valor do input
 }
 
-const Input: React.FC<InputProps> = ({name, icon, ...rest}) => {
+const Input: React.FC<InputProps> = ({name, icon, containerStyle={}, ...rest}) => {
     const inputElementRef = useRef<any>(null); /*para o setvalue*/
 
     const {registerField, defaultValue='', fieldName, error} = useField(name); /*UseFIeld é o 
@@ -60,7 +61,7 @@ const Input: React.FC<InputProps> = ({name, icon, ...rest}) => {
     }, [fieldName, registerField]);
 
     return (
-    <Container isFocused={isFocused} isErrored={!!error} >
+    <Container style={containerStyle} isFocused={isFocused} isErrored={!!error} >
         <Icon name={icon} size={20} color={isFocused || isFilled ? "#ff9000" : "#666630"} />
 
         <TextInput 
